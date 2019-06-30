@@ -1,0 +1,31 @@
+<html>
+<head></head>
+<body>
+  <div class="module inbox-view">
+      <h1> {{ email.from }} </h1>
+  </div>
+  <div class="module directive">
+  <div class="email">
+  <div class="email__info">
+    <p class="email__list-from"> {{ email.from }} </p>
+    <p class="email__list-date"> {{ email.date | date: 'dd/MM/yyyy' }} </p>
+    <p class="email__list-subject"> {{ email.subject }} </p>
+    <a href="" ng-click="reply = !reply;" class="email__reply">
+      Reply
+    </a>
+    <a href="" ng-click="goBack();" class="email__back">
+      Back
+    </a>
+  </div>
+  <div class="email__content" ng-bind-html="email.content"></div>
+  <div class="email__response" ng-show="reply">
+    <textarea ng-model="response" class="email__response-text" placeholder="Enter a reply">
+    </textarea>
+    <a href="" ng-click="email.reply(response);">
+      Send
+    </a>
+  </div>
+</div>
+  </div>
+</body>
+</html>

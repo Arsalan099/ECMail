@@ -1,0 +1,46 @@
+<html>
+<head></head>
+<body>
+  <div class="module inbox-view">
+      <h1><a href="" ng-click="createMessage(1);">Compose</a></h1><br>  
+      <h1>Inbox</h1><br>
+      <h1>Sent</h1><br>
+      <h1>Draft</h1><br>
+      <h1>Trash</h1>
+  </div>
+  <div class="module directive">
+  <div class="inbox">
+  <div class="search-bar">
+    <div class="inbox__count">
+      You have {{ inbox.length  }} messages
+    </div>
+    <div ng-hide="!inbox.length">
+      <input type="text" class="inbox__search" 
+        ng-model="inbox.search" placeholder="Search by 'from', e.g. TicketMaster">
+    </div>
+
+  </div>
+  <ul class="inbox__list">
+    <li ng-show="!inbox.length" class="no-emails">
+      No messages! Try sending one to a friend.
+    </li>
+    <li ng-repeat="message in inbox | filter:{ from: inbox.search }">
+      <div class="inbox__list-info">
+        <p class="inbox__list-from"> From: {{ message.from }} </p>
+        <p class="inbox__list-date"> {{ message.date | date: 'dd/MM/yyyy' }} </p>
+        <p class="inbox__list-subject"> {{ message.subject }} </p>
+      </div>
+      <div class="inbox__list-actions">
+        <a href="" ng-click="goToMessage(message.id);">
+          Read
+        </a>
+        <a href="" ng-click="deleteMessage($index);">
+          Delete
+        </a>
+      </div>
+    </li>
+  </ul>
+</div>
+  </div>
+</body>
+</html>

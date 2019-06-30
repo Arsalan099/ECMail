@@ -1,0 +1,86 @@
+<html>
+  <head>
+    <title>Cloned Gmail</title>
+    <link href="style.css" rel="stylesheet">
+    <script src="lib/jquery-v1.11.1.js"></script>
+    <script src="lib/angular-v1.2.22.js"></script>
+    <script src="lib/angular-route-v1.2.22.js"></script>
+    <script src="lib/angular-sanitize-v1.2.22.js"></script>
+  </head>
+  <body ng-app="app">
+    <header class="header">
+      <img src="gmail.png" alt="" align="left">
+        <p>ECmail</p>
+    </header>
+    <main class="main" role="main">
+      <div ng-view class="flex"></div>
+    </main>
+    <script>
+    var jsonobj2={};
+    var app = angular.module('app',['ngRoute','ngSanitize']);
+    app.config(['$routeProvider',function ($routeProvider ){
+      $routeProvider
+      .when('/inbox', {
+        templateUrl: 'inbox.html',
+        controller: 'InboxCtrl',
+      })
+      .when('/inbox/email/:id', {
+        templateUrl: 'email.html',
+        controller: 'EmailCtrl',
+      })
+      .when('/inbox/create', {
+        templateUrl: 'create.html',
+        controller: 'CreateCtrl'
+      })
+      .otherwise({
+        redirectTo: '/inbox'
+      });
+    }]);
+    app.controller('InboxCtrl',function($scope,$http,$location){
+      $http.get("emails.json").then(function (response) {
+      var js={};
+      js = response.data.records;
+      if(angular.equals(jsonobj2,{})){}
+      else{
+        js.push(jsonobj2);
+      }
+      $scope.inbox=js;
+      });
+      $scope.deleteMessage = function(index){
+        $scope.inbox.splice(index,1);
+      }
+      $scope.goToMessage = function(id){
+        if(id==5){
+          jsonobj2.count-=1;
+        }
+        $location.path('inbox/email/' + id)
+      }
+      $scope.createMessage = function(id){
+        $location.path('inbox/create')
+      }
+    });
+    app.controller('EmailCtrl',function($scope,$http,$routeParams,$location){
+      $http.get("emails.json").then(function (response) {
+      var data = response.data.records;
+      if(angular.equals(jsonobj2,{})){}
+      else{
+        data.push(jsonobj2);
+      }
+      $scope.email=data[$routeParams.id-1];
+      });
+      $scope.goBack = function(){
+        if(jsonobj2.count==0){
+            jsonobj2={};
+          }
+        $location.path('inbox')
+      }
+    });
+    app.controller('CreateCtrl',function($scope,$location){
+      $scope.addup = function(){
+        jsonobj2={"from":$scope.response1,"date":1400956671914,"subject":$scope.response2,"content":$scope.response3,"id":5,"count":parseInt($scope.response4)};
+        $location.path('inbox')
+      }
+    })
+    </script>
+  </body>
+</html>
